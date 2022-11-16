@@ -1,0 +1,13 @@
+[package]
+name = "bevier"
+version = "0.1.0"
+edition = "2021"
+description = ""
+
+[dependencies]
+clap = { version = "4.0.25", features = ["derive"] }
+
+[profile.release]
+opt-level = "s"
+lto = true
+codegen-units = 1
