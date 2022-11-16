@@ -16,7 +16,7 @@ Options:
 
 ### ``create`` Command
 ````text
-Usage: cargo bevier {create|-c} [OPTIONS] --name <name>
+Usage: bevier {create|-c} [OPTIONS] --name <name>
 
 Options:
   -n, --name <name>         The name of the Project.
