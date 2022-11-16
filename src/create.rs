@@ -3,7 +3,7 @@ use std::fs::File;
 use std::path::Path;
 use std::process::Command;
 use std::{fs, thread};
-use std::io::{Read, Write};
+use std::io::{Write};
 use std::time::Duration;
 
 pub struct Settings {
