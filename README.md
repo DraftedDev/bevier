@@ -2,7 +2,7 @@
 
 ## Getting Started
 - Install with `cargo install bevier`
-- Create your project using `cargo bevier create --name "my_bevy_game"`
+- Create your project executing `bevier create --name "my_bevy_game"`
 
 ## Full Usage
 ````text
