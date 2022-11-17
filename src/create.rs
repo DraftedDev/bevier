@@ -74,9 +74,6 @@ fn main() {
     /*
     Configure project for different targets.
     TODO: make cargo automatically add bevy/dynamic feature on debug
-    TODO: add code stripping to configs (need research)
-    TODO: add incremental setting (needs research)
-    TODO: check if a nightly toolchain is installed and use it, otherwise warn the user
     TODO: add smart module (for pro-devs)
     TODO: benchmark modules
      */
@@ -91,12 +88,14 @@ opt-level = 3 # optimize dependencies in debug
 
 [profile.dev]
 opt-level = 1 # don't optimize your own code in debug that much
+incremental = true
 
 [profile.release]
 lto = true # enables fat lto to optimize release build
 codegen-units = 1 # the less codegen units, the more optimization, but slow compiling
 panic = "abort" # disables unwinding errors, less size, less debug info
 opt-level = "s" # optimize for size
+strip = "symbols"
 
 [workspace]
 resolver = "2" # Important if you are using workspaces
@@ -134,9 +133,11 @@ opt-level = 2 # optimize dependencies in debug (a bit)
 
 [profile.dev]
 opt-level = 0 # don't optimize your own code in debug
+incremental = true
 
 [profile.release]
 lto = "thin" # enables thin lto to optimize release builds fast
+incremental = true
 
 [workspace]
 resolver = "2" # Important if you are using workspaces
@@ -171,4 +172,29 @@ resolver = "2" # Important if you are using workspaces
     // write config
     config_file.write(config.as_bytes()).expect("Could not write to config.toml!");
 
+    // parse default output of get_default_toolchain()
+    if get_default_toolchain().contains("nightly") {
+
+        File::create("rust-toolchain.toml").expect("Could not create rust-toolchain.toml file!")
+            .write(r#"
+[toolchain]
+channel = "nightly"
+        "#.as_bytes()).expect("Could not write to rust-toolchain.toml file!");
+
+    } else {
+        println!("WARNING: It seems you do not use the default nightly toolchain. To get maximum performance switch to the nightly channel.");
+    }
+
+}
+
+/// Get the default toolchain
+pub fn get_default_toolchain() -> String {
+    // convert the output of 'rustup show active-toolchain' to a String
+    String::from_utf8(
+        Command::new("rustup")
+                          .args(&["show", "active-toolchain"])
+                          .output()
+            .unwrap()
+            .stdout
+    ).unwrap()
 }
