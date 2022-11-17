@@ -1,5 +1,5 @@
 /target
-/.idea
+/.idea/*
 bevier.iml
 Cargo.lock
 .idea/vcs.xml
