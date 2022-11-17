@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/bevier.iml" filepath="$PROJECT_DIR$/bevier.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/bevier.iml" filepath="$PROJECT_DIR$/.idea/bevier.iml" />
     </modules>
   </component>
 </project>

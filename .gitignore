@@ -2,3 +2,6 @@
 /.idea
 bevier.iml
 Cargo.lock
+.idea/vcs.xml
+.idea/modules.xml
+.idea/misc.xml
