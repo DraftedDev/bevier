@@ -85,74 +85,78 @@ fn main() {
             println!("You've chosen the Size config. Your builds will be small and decent in performance, best for Web-Builds.");
             println!("Do 'cargo run --features bevy/dynamic' for debug builds!");
 
-            "\
-[profile.dev.package.\"*\"]\n
-opt-level = 3 # optimize dependencies in debug\n
-\n
-[profile.dev]\n
-opt-level = 1 # don't optimize your own code in debug that much\n
-\n
-[profile.release]\n
-lto = true # enables fat lto to optimize release build\n
-codegen-units = 1 # the less codegen units, the more optimization, but slow compiling\n
-panic = \"abort\" # disables unwinding errors, less size, less debug info\n\
-opt-level = \"s\" # optimize for size\n
-\n
-[workspace]\n
-resolver = \"2\" # Important if you are using workspaces\n
-            "
+            r#"
+[profile.dev.package."*"]
+opt-level = 3 # optimize dependencies in debug
+
+[profile.dev]
+opt-level = 1 # don't optimize your own code in debug that much
+
+[profile.release]
+lto = true # enables fat lto to optimize release build
+codegen-units = 1 # the less codegen units, the more optimization, but slow compiling
+panic = "abort" # disables unwinding errors, less size, less debug info
+opt-level = "s" # optimize for size
+
+[workspace]
+resolver = "2" # Important if you are using workspaces
+            "#
         }
 
         Config::Performance => {
             println!("You've chosen the Performance config. Your builds will be fast and small, but will take centuries to compile.");
             println!("Do 'cargo run --features bevy/dynamic' for debug builds!");
 
-            "\
-[profile.dev.package.\"*\"]\n
-opt-level = 3 # optimize dependencies in debug\n
-\n
-[profile.dev]\n
-opt-level = 1 # don't optimize your own code in debug that much\n
-\n
-[profile.release]\n
-lto = true # enables fat lto to optimize release build\n
-codegen-units = 1 # the less codegen units, the more optimization, but slow compiling\n
-panic = \"abort\" # disables unwinding errors, less size, less debug info\n\
-opt-level = 3 # optimize for performance\n
-\n
-[workspace]\n
-resolver = \"2\" # Important if you are using workspaces\n
-            "
+            r#"
+[profile.dev.package."*"]
+opt-level = 3 # optimize dependencies in debug
+
+[profile.dev]
+opt-level = 1 # don't optimize your own code in debug that much
+
+[profile.release]
+lto = true # enables fat lto to optimize release build
+codegen-units = 1 # the less codegen units, the more optimization, but slow compiling
+opt-level = 3 # optimize for size
+
+[workspace]
+resolver = "2" # Important if you are using workspaces
+            "#
         }
 
         Config::BuildSpeed => {
             println!("You've chosen the build speed config. Your builds will compile fast, in debug and release mode, but won't be that fast.");
             println!("Do 'cargo run --features bevy/dynamic' for debug builds!");
 
-            "\
-[profile.dev.package.\"*\"]\n
-opt-level = 1 # optimize dependencies a little bit in debug\n
-\n
-[profile.dev]\n
-opt-level = 0 # don't optimize your own code in debug\n
-\n
-[profile.release]\n
-lto = \"thin\" # enables thin lto, a fast and powerful way to optimize\n
-panic = \"abort\" # disables unwinding errors, less size, less debug info\n\
-\n
-[workspace]\n
-resolver = \"2\" # Important if you are using workspaces\n
-            "
+            r#"
+[profile.dev.package."*"]
+opt-level = 2 # optimize dependencies in debug (a bit)
+
+[profile.dev]
+opt-level = 0 # don't optimize your own code in debug
+
+[profile.release]
+lto = "thin" # enables thin lto to optimize release builds fast
+
+[workspace]
+resolver = "2" # Important if you are using workspaces
+            "#
         }
 
         Config::None => {
             println!("You've chosen no config. Your builds won't be much optimized or smaller.");
             println!("Do 'cargo run --features bevy/dynamic' for debug builds!");
 
-            "\
-[workspace]\n\
-resolver = \"2\" # Important if you are using workspaces\n
-            "
+            r#"
+[profile.dev.package."*"]
+opt-level = 3 # optimize dependencies in debug
+
+[profile.dev]
+opt-level = 1 # don't optimize your own code in debug that much
+
+[workspace]
+resolver = "2" # Important if you are using workspaces
+            "#
         }
 
         /*
