@@ -24,6 +24,14 @@ Options:
   -h, --help                Print help information
 ````
 
+## Configurations
+- none: Only adds some options for compatibility
+- performance: For optimal performance on debug and release builds
+- size: Optimizes the size of the release build
+- buildSpeed: Use if you don't want to wait that long for debug builds
+- smart: A mix of every config
+- potato: Made for potato PCs that can't run stuff that fast
+
 ## TODO
 - Add benchmarking module
 - Add --example option to copy a bevy example project
