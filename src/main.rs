@@ -17,7 +17,6 @@ fn main() {
         // 'Create' Command
         .subcommand(
             Command::new("create")
-                .short_flag('c')
                 .about("Create a new Bevy Engine Project.")
                 .arg(
                     Arg::new("name")
@@ -32,7 +31,16 @@ fn main() {
                     Arg::new("config")
                         .long("configure")
                         .short('o')
-                        .help("Set the configuration of the project to generate.")
+                        .help(r#"
+Set the configuration of the project to generate.
+Configuration Help:
+    - "none" No config, only set some values for compatiblity
+    - "performance" Configure for performance
+    - "buildSpeed" Configure for development and release build speed
+    - "size" Configure for size
+    - "smart" Basically every config mixed with some other settings
+    - "potato" If you develop with a trashy PC, then choose this config
+"#)
                         .action(ArgAction::Set)
                         .num_args(1),
                 ),
@@ -68,8 +76,19 @@ fn main() {
                         settings.config = Config::Size;
                     }
 
+                    "smart" => {
+                        settings.config = Config::Smart;
+                    }
+
+                    "potato" => {
+                        settings.config = Config::Potato;
+                    }
+
                     _ => {
-                        Error::<DefaultFormatter>::raw(ErrorKind::InvalidValue, "Invalid config! Valid configs: 'size', 'performance', 'buildSpeed', 'none'").exit();
+                        Error::<DefaultFormatter>::raw(ErrorKind::InvalidValue, r#"
+Invalid config! Valid configs: 'size', 'performance', 'buildSpeed', 'potato', 'none'.
+For configuration help, do "bevier create --help".
+                        "#).exit();
                     }
                 }
             }

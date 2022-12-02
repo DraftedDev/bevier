@@ -25,22 +25,24 @@ pub enum Config {
     Performance,
     BuildSpeed,
     None,
+    Smart,
+    Potato,
 }
 
 pub fn create(settings: &Settings) {
 
     // create cargo project
-    Command::new("cargo")
+    let mut cmd = Command::new("cargo")
         .args(&["-q", "new", "--bin", settings.name.as_str(), ])
         .spawn()
         .expect("Failed to execute cargo-new command!");
 
+    // this makes sure that the command has finished executing
+    cmd.wait().expect("Failed to wait for cargo-new command!");
+
     println!("Created Cargo Project!");
 
-    // I'm too lazy for implementing awaiting the cargo command, so just sleep a while
-    // TODO: Implement awaiting for last command to finish
-    thread::sleep(Duration::new(2, 20));
-
+    // change execution dir to the dir of the generated project
     let mut project_dir = current_dir().unwrap();
     project_dir.push(&settings.name);
 
@@ -48,14 +50,16 @@ pub fn create(settings: &Settings) {
     set_current_dir(Path::new(project_dir.as_path())).expect("Could not set current dir to Project dir!");
 
     // edit main.rs
-    fs::write("src/main.rs", "\
-use bevy::prelude::*;\n
+    fs::write("src/main.rs", r#"
+#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
+
+use bevy::prelude::*;
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
         .run();
 }
-    ")
+    "#)
         .expect("Could not write to main.rs!");
 
     // add dependencies
@@ -71,12 +75,6 @@ fn main() {
 
     let mut config_file = File::create(".cargo/config.toml").expect("Could not create config.toml!");
 
-    /*
-    Configure project for different targets.
-    TODO: make cargo automatically add bevy/dynamic feature on debug
-    TODO: add smart module (for pro-devs)
-    TODO: benchmark modules
-     */
     let config = match settings.config {
         Config::Size => {
             println!("You've chosen the Size config. Your builds will be small and decent in performance, best for Web-Builds.");
@@ -160,13 +158,71 @@ resolver = "2" # Important if you are using workspaces
             "#
         }
 
-        /*
+
         Config::Smart => {
-            // size config for web builds
-            // performance config for native builds
-            // faster debug builds
+            println!("You've chosen no config. Your builds won't be much optimized or smaller.");
+            println!("Do 'cargo run --features bevy/dynamic' for debug builds!");
+
+            r#"
+[profile.dev.package."*"]
+opt-level = 3 # optimize dependencies in debug
+
+[profile.dev]
+opt-level = 1 # don't optimize your own code in debug that much
+incremental = true
+
+[profile.release]
+lto = true # enables fat lto to optimize release build
+codegen-units = 1 # the less codegen units, the more optimization, but slow compiling
+# panic = "abort" # uncomment this to get a bit smaller executables, however it will harden debugging release builds
+opt-level = 3 # optimize for performance
+strip = "symbols"
+
+[workspace]
+resolver = "2" # Important if you are using workspaces
+
+[target.wasm32-unknown-unknown]
+runner = "wasm-server-runner"
+lto = true # enables fat lto to optimize release build
+codegen-units = 1 # the less codegen units, the more optimization, but slow compiling
+# panic = "abort" # uncomment this to get a bit smaller executables, however it will harden debugging release builds (not recommended for Web-Builds)
+opt-level = "s" # optimize for size
+strip = "symbols"
+            "#
         }
-         */
+
+        Config::Potato => {
+            println!("You've chosen the potato config. Your game will be perfectly FOR BEING DEVELOPED on a potato. Have Fun :D");
+            println!("Do 'cargo run --features bevy/dynamic' for debug builds!");
+
+            r#"
+[profile.dev.package."*"]
+opt-level = 0 # don't optimize anything
+
+[profile.dev]
+opt-level = 0 # don't optimize your own code
+incremental = true
+
+[profile.release]
+lto = "thin" # enables fat lto to optimize release build
+codegen-units = 1 # the less codegen units, the more optimization, but slow compiling
+panic = "abort" # remove if you want better debugging support in release builds
+opt-level = "s" # optimize for size
+strip = "symbols"
+
+[workspace]
+resolver = "2" # Important if you are using workspaces
+
+[target.wasm32-unknown-unknown]
+runner = "wasm-server-runner"
+lto = "thin" # enables fat lto to optimize release build
+codegen-units = 1 # the less codegen units, the more optimization, but slow compiling
+panic = "abort" # remove if you want better debugging support in release builds
+opt-level = "s" # optimize for size
+strip = "symbols"
+            "#
+        }
+
     };
 
     // write config
