@@ -1,10 +1,9 @@
 use std::env::{current_dir, set_current_dir};
+use std::fs;
 use std::fs::File;
 use std::path::Path;
 use std::process::Command;
-use std::{fs, thread};
 use std::io::{Write};
-use std::time::Duration;
 
 pub struct Settings {
     pub name: String,
