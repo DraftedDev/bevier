@@ -1,11 +1,11 @@
 [package]
 name = "bevier"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2021"
 license-file = "LICENSE.txt"
 description = "A CLI Tool to generate Games using the Bevy Game Engine."
 repository = "https://github.com/DraftedDev/bevier"
-keywords = ["gamedev", "cli"]
+keywords = ["gamedev", "cli", "bevy"]
 categories = ["command-line-utilities", "game-development"]
 exclude = [
     ".idea/*",
