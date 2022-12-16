@@ -121,7 +121,7 @@ resolver = "2" # Important if you are using workspaces
         }
 
         Config::BuildSpeed => {
-            println!("You've chosen the build speed config. Your builds will compile fast, in debug and release mode, but won't be that fast.");
+            println!("You've chosen the build speed config. Your builds will compile fast, in debug and release mode, but won't be that performant.");
             println!("Do 'cargo run --features bevy/dynamic' for debug builds!");
 
             r#"
@@ -159,7 +159,7 @@ resolver = "2" # Important if you are using workspaces
 
 
         Config::Smart => {
-            println!("You've chosen no config. Your builds won't be much optimized or smaller.");
+            println!("You've chosen the smart config. Your builds will be performant and small (in web builds).");
             println!("Do 'cargo run --features bevy/dynamic' for debug builds!");
 
             r#"
