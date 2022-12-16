@@ -35,4 +35,4 @@ Options:
 ## TODO
 - Add benchmarking module
 - Add --example option to copy a bevy example project
-- Make bevy automatically use the bevy/dynamic feature when debug mode
+- Make bevy automatically use the bevy/dynamic feature in debug mode
