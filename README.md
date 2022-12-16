@@ -32,7 +32,10 @@ Options:
 - smart: A mix of every config
 - potato: Made for potato PCs that can't run stuff that fast
 
+## Found an Issue
+- Please create a new Issue <a href="https://github.com/DraftedDev/bevier/issues/new">here</a>
+- Make sure that you provided all the information required to solve this issue (type of issue, description, etc.)
+
 ## TODO
 - Add benchmarking module
-- Add --example option to copy a bevy example project
 - Make bevy automatically use the bevy/dynamic feature in debug mode

@@ -1,6 +1,6 @@
 [package]
 name = "bevier"
-version = "0.1.2"
+version = "0.1.3"
 edition = "2021"
 license-file = "LICENSE.txt"
 description = "A CLI Tool to generate Games using the Bevy Game Engine."
@@ -13,7 +13,7 @@ exclude = [
 ]
 
 [dependencies]
-clap = { version = "4.0.25", features = ["derive"] }
+clap = { version = "4.0.29", features = ["derive"] }
 
 [profile.release]
 opt-level = "s"
