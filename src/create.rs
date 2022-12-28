@@ -931,13 +931,76 @@ pub fn create(settings: &Settings) {
     fs::write("src/main.rs", example)
         .expect("Could not write to main.rs!");
 
-    // add dependencies
-    Command::new("cargo")
-        .args(&["-q", "add", "bevy"])
-        .spawn()
-        .expect("Failed to execute cargo-add command!");
+    fs::write("Cargo.toml", format!(
+        r#"[package]
+name = "{}"
+version = "0.1.0"
+edition = "2021"
 
-    println!("Added dependencies!");
+[dependencies.bevy]
+version = "0.9"
+# Disable the default features if there are any that you do not want
+default-features = false
+features = [
+  # These are the default features:
+  # (re-enable whichever you like)
+
+  # Bevy functionality:
+  "bevy_asset",         # Assets management
+  "bevy_scene",         # Scenes management
+  "bevy_gilrs",         # Gamepad input support
+  "bevy_audio",         # Builtin audio
+  "bevy_winit",         # Window management
+  "animation",          # Animation support
+  "x11",                # Linux: Support X11 windowing system
+  "filesystem_watcher", # Asset hot-reloading
+  "render",             # Graphics Rendering
+
+  ## "render" actually just includes:
+  ## (feel free to use just a subset of these, instead of "render")
+  "bevy_render",        # Rendering framework core
+  "bevy_core_pipeline", # Common rendering abstractions
+  "bevy_sprite",        # 2D (sprites) rendering
+  "bevy_pbr",           # 3D (physically-based) rendering
+  "bevy_gltf",          # GLTF 3D assets format support
+  "bevy_text",          # Text/font rendering
+  "bevy_ui",            # UI toolkit
+
+  # File formats:
+  "png",
+  "hdr",
+  "vorbis",
+
+  # These are other features that may be of interest:
+  # (add any of these that you need)
+
+  # Bevy functionality:
+  "wayland",              # Linux: Support Wayland windowing system
+  "subpixel_glyph_atlas", # Subpixel antialiasing for text/fonts
+  "serialize",            # Support for `serde` Serialize/Deserialize
+  "bevy_dynamic_plugin",   # Support for loading of `DynamicPlugin`s
+
+  # File formats:
+  "ktx2", # preferred format for GPU textures
+  "dds",
+  "jpeg",
+  "bmp",
+  "tga",
+  "basis-universal",
+  "zstd", # needed if using zstd in KTX2 files
+  "flac",
+  "mp3",
+  "wav",
+
+  # Development/Debug features:
+  "dynamic",      # Dynamic linking for faster compile-times
+  "trace",        # Enable tracing for performance measurement
+  "trace_tracy",  # Tracing using `tracy`
+  "trace_chrome", # Tracing using the Chrome format
+  "wgpu_trace",   # WGPU/rendering tracing
+]
+    "#, settings.name))
+        .expect("Could not write to Cargo.toml!");
 
     // configure project
     fs::create_dir(Path::new(".cargo")).expect("Could not create .cargo dir!");
@@ -947,7 +1010,6 @@ pub fn create(settings: &Settings) {
     let config = match settings.config {
         Config::Size => {
             println!("You've chosen the Size config. Your builds will be small and decent in performance, best for Web-Builds.");
-            println!("Do 'cargo run --features bevy/dynamic' for debug builds!");
 
             r#"
 [profile.dev.package."*"]
@@ -966,13 +1028,15 @@ strip = "symbols"
 
 [workspace]
 resolver = "2" # Important if you are using workspaces
+
+[target.x86_64-pc-windows-msvc]
+linker = "rust-lld.exe" # this is needed for using the dynamic bevy feature on Windows
+rustflags = ["-Zshare-generics=off"]
             "#
         }
 
         Config::Performance => {
             println!("You've chosen the Performance config. Your builds will be fast and small, but will take centuries to compile.");
-            println!("Do 'cargo run --features bevy/dynamic' for debug builds!");
-
             r#"
 [profile.dev.package."*"]
 opt-level = 3 # optimize dependencies in debug
@@ -983,16 +1047,19 @@ opt-level = 1 # don't optimize your own code in debug that much
 [profile.release]
 lto = true # enables fat lto to optimize release build
 codegen-units = 1 # the less codegen units, the more optimization, but slow compiling
-opt-level = 3 # optimize for size
+opt-level = 3 # optimize for performance
 
 [workspace]
 resolver = "2" # Important if you are using workspaces
+
+[target.x86_64-pc-windows-msvc]
+linker = "rust-lld.exe" # this is needed for using the dynamic bevy feature on Windows
+rustflags = ["-Zshare-generics=off"]
             "#
         }
 
         Config::BuildSpeed => {
             println!("You've chosen the build speed config. Your builds will compile fast, in debug and release mode, but won't be that performant.");
-            println!("Do 'cargo run --features bevy/dynamic' for debug builds!");
 
             r#"
 [profile.dev.package."*"]
@@ -1008,12 +1075,15 @@ incremental = true
 
 [workspace]
 resolver = "2" # Important if you are using workspaces
+
+[target.x86_64-pc-windows-msvc]
+linker = "rust-lld.exe" # this is needed for using the dynamic bevy feature on Windows
+rustflags = ["-Zshare-generics=off"]
             "#
         }
 
         Config::None => {
             println!("You've chosen no config. Your builds won't be much optimized or smaller.");
-            println!("Do 'cargo run --features bevy/dynamic' for debug builds!");
 
             r#"
 [profile.dev.package."*"]
@@ -1024,13 +1094,16 @@ opt-level = 1 # don't optimize your own code in debug that much
 
 [workspace]
 resolver = "2" # Important if you are using workspaces
+
+[target.x86_64-pc-windows-msvc]
+linker = "rust-lld.exe" # this is needed for using the dynamic bevy feature on Windows
+rustflags = ["-Zshare-generics=off"]
             "#
         }
 
 
         Config::Smart => {
             println!("You've chosen the smart config. Your builds will be performant and small (in web builds).");
-            println!("Do 'cargo run --features bevy/dynamic' for debug builds!");
 
             r#"
 [profile.dev.package."*"]
@@ -1057,12 +1130,15 @@ codegen-units = 1 # the less codegen units, the more optimization, but slow comp
 # panic = "abort" # uncomment this to get a bit smaller executables, however it will harden debugging release builds (not recommended for Web-Builds)
 opt-level = "s" # optimize for size
 strip = "symbols"
+
+[target.x86_64-pc-windows-msvc]
+linker = "rust-lld.exe" # this is needed for using the dynamic bevy feature on Windows
+rustflags = ["-Zshare-generics=off"]
             "#
         }
 
         Config::Potato => {
             println!("You've chosen the potato config. Your game will be perfectly FOR BEING DEVELOPED on a potato. Have Fun :D");
-            println!("Do 'cargo run --features bevy/dynamic' for debug builds!");
 
             r#"
 [profile.dev.package."*"]
@@ -1082,13 +1158,9 @@ strip = "symbols"
 [workspace]
 resolver = "2" # Important if you are using workspaces
 
-[target.wasm32-unknown-unknown]
-runner = "wasm-server-runner"
-lto = "thin" # enables fat lto to optimize release build
-codegen-units = 1 # the less codegen units, the more optimization, but slow compiling
-panic = "abort" # remove if you want better debugging support in release builds
-opt-level = "s" # optimize for size
-strip = "symbols"
+[target.x86_64-pc-windows-msvc]
+linker = "rust-lld.exe" # this is needed for using the dynamic bevy feature on Windows
+rustflags = ["-Zshare-generics=off"]
             "#
         }
 
