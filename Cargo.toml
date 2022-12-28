@@ -3,7 +3,6 @@ name = "bevier"
 version = "0.1.4"
 edition = "2021"
 license-file = "LICENSE.txt"
-license = "MIT"
 description = "A CLI Tool to generate Games using the Bevy Game Engine."
 repository = "https://github.com/DraftedDev/bevier"
 keywords = ["gamedev", "cli", "bevy", "game", "tool"]
