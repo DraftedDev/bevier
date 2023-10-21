@@ -1,6 +1,5 @@
-use std::io::Write;
+use include_dir::{include_dir, Dir};
 use std::process::Command;
-use include_dir::{Dir, include_dir};
 
 pub static SIMPLE_3D: Dir = include_dir!("assets/simple_3d");
 pub fn clear() {

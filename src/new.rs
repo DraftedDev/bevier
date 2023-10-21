@@ -1,21 +1,18 @@
 use std::env::current_dir;
 use std::fs;
-use std::fs::File;
-use include_dir::DirEntry;
-use inquire::{Confirm, Select, Text};
-use inquire::error::InquireResult;
-use log::info;
+
 use crate::utils::{clear, SIMPLE_3D};
+use inquire::error::InquireResult;
+use inquire::{Confirm, Select, Text};
+use log::info;
 
 pub fn init() -> InquireResult<()> {
-    let name = Text::new("Project Name")
-        .prompt()?;
+    let name = Text::new("Project Name").prompt()?;
 
-    let template = Select::new("Project Type", vec!["Empty App", "Simple 2D", "Simple 3D"])
-        .prompt()?;
+    let template =
+        Select::new("Project Type", vec!["Empty App", "Simple 2D", "Simple 3D"]).prompt()?;
 
-    let config = Select::new("Project Config", vec!["Default", "Size", "Performance"])
-        .prompt()?;
+    let config = Select::new("Project Config", vec!["Default", "Size", "Performance"]).prompt()?;
 
     clear();
 
@@ -38,10 +35,9 @@ pub fn init() -> InquireResult<()> {
             "Simple 2D" => todo!(),
             "Simple 3D" => {
                 SIMPLE_3D.extract(project_path)?;
-            },
+            }
             _ => panic!("Unknown template!"),
         }
-
     } else {
         info!("Cancelled! Exiting...");
     }
