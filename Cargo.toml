@@ -5,12 +5,8 @@ edition = "2021"
 license-file = "LICENSE"
 description = "A CLI Tool to generate Games using the Bevy Game Engine."
 repository = "https://github.com/DraftedDev/bevier"
-keywords = ["gamedev", "cli", "bevy", "game", "tool"]
-categories = ["command-line-utilities", "game-development", "development-tools", "game-engines", "template-engine"]
-exclude = [
-    ".idea/*",
-    "bevier.iml",
-]
+keywords = ["gamedev", "cli", "bevy", "generate"]
+categories = ["command-line-utilities", "game-development", "development-tools"]
 
 [dependencies]
 inquire = "0.6.2"
