@@ -3,7 +3,10 @@ use std::fs;
 use std::fs::File;
 use std::io::Write;
 
-use crate::utils::{clear, DEFAULT_CONFIG, PERFORMANCE_CONFIG, SIMPLE_3D, SIZE_CONFIG};
+use crate::utils::{
+    clear, CARGO_TOML_PLACEHOLDER, DEFAULT_CONFIG, EMPTY_APP, PERFORMANCE_CONFIG, SIMPLE_3D,
+    SIZE_CONFIG,
+};
 use inquire::error::InquireResult;
 use inquire::{Confirm, Select, Text};
 use log::info;
@@ -30,7 +33,7 @@ pub fn init() -> InquireResult<()> {
             .join(name);
 
         // generate project
-        fs::create_dir(&project_path).expect("Could not create directory");
+        fs::create_dir(project_path.clone()).expect("Could not create directory");
 
         let cargo_config = match config {
             "Default" => DEFAULT_CONFIG,
@@ -39,7 +42,7 @@ pub fn init() -> InquireResult<()> {
             _ => panic!("Unknown config!"),
         };
 
-        let cargo_config_path = project_path.join(".cargo");
+        let cargo_config_path = project_path.clone().join(".cargo");
 
         fs::create_dir(cargo_config_path.clone()).expect("Could not create directory");
 
@@ -49,12 +52,19 @@ pub fn init() -> InquireResult<()> {
             .expect("Could not write file");
 
         match template {
-            "Empty App" => todo!(),
+            "Empty App" => {
+                EMPTY_APP.extract(project_path.clone())?;
+            }
             "Simple 3D" => {
-                SIMPLE_3D.extract(project_path)?;
+                SIMPLE_3D.extract(project_path.clone())?;
             }
             _ => panic!("Unknown template!"),
         }
+
+        fs::rename(
+            project_path.clone().join(CARGO_TOML_PLACEHOLDER),
+            project_path.clone().join("Cargo.toml"),
+        )?;
     } else {
         info!("Cancelled! Exiting...");
     }
