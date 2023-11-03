@@ -8,6 +8,10 @@ repository = "https://github.com/DraftedDev/bevier"
 keywords = ["gamedev", "cli", "bevy", "generate"]
 categories = ["command-line-utilities", "game-development", "development-tools"]
 
+[[bin]]
+name = "bevier"
+path = "src/main.rs"
+
 [dependencies]
 inquire = "0.6.2"
 rayon = "1.7.0"
