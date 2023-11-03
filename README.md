@@ -1,12 +1,17 @@
-# Bevier // Bevy Game Generator
+# Bevier - Bevy Game Template Generator
+[![crates.io](https://img.shields.io/crates/v/bevier)](https://crates.io/crates/bevier)
+[![Bevy tracking](https://img.shields.io/badge/Bevy%20tracking-released%20version-lightblue)](https://github.com/bevyengine/bevy/blob/main/docs/plugins_guidelines.md#main-branch-tracking)
 
-**Create awesome Bevy Games from templates and more...**
+**Generate Bevy Projects from various templates and configs!**
 
-## How to use
+## Usage
+Enter `bevier new` and complete the prompts:
+- `Project Name`: The name of your project (will not change the template crate name).
+- `Project Template`: The template you want to use.
+- `Project Config`: The cargo config to generate (`.cargo/config.toml`).
+- `Do you want to continue?`: Whether you want to continue (`y` or `n`).
 
-**Usage:** Enter `bevier new` and you will be prompted to enter name, template, etc. of you Project.
-
-## WARNING
-
-STILL IN DEVELOPMENT\
-CARGO VERSION COMMING SOON
+## Bevy Support
+| Bevy Version | Crate Version |
+|--------------|---------------|
+| `0.11`       | `1.0.0`       |
