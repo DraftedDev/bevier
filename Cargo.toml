@@ -1,6 +1,6 @@
 [package]
 name = "bevier"
-version = "1.1.0"
+version = "1.1.1"
 edition = "2021"
 license-file = "LICENSE"
 description = "An interactive CLI to generate Games using the Bevy Game Engine."
