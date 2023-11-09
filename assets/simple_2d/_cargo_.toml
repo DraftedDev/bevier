@@ -1,0 +1,15 @@
+[package]
+name = "simple_2d"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+# Add other dependencies here
+
+[dependencies.bevy]
+version = "0.12"
+# Disable default features for better customization.
+default-features = false
+features = "%FEATURES%"
