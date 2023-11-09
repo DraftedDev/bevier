@@ -1,13 +1,24 @@
+use env_logger::WriteStyle;
 use inquire::error::InquireResult;
 use inquire::Select;
-use log::info;
+use log::{info, LevelFilter};
 
-pub mod logging;
 pub mod new;
 pub mod utils;
 
 fn main() -> InquireResult<()> {
-    logging::init_console();
+    #[cfg(not(debug_assertions))]
+    let filter = LevelFilter::Info;
+    #[cfg(debug_assertions)]
+    let filter = LevelFilter::Debug;
+
+    env_logger::builder()
+        .filter_level(filter)
+        .format_timestamp(None)
+        .format_module_path(false)
+        .write_style(WriteStyle::Always)
+        .parse_default_env()
+        .init();
 
     info!(
         "Welcome to bevier v{} // Made by https://DraftedDev.github.io",
